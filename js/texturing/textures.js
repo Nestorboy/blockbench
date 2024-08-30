@@ -141,6 +141,17 @@ class Texture {
 			centroid varying vec2 vUv;
 			varying float light;
 			varying float lift;
+			
+			// GLSL implementation of texel anti-aliasing function described by t3ssel8r:
+			// https://www.youtube.com/watch?v=d6tp43wZqps
+			vec2 TexelAA(vec2 uv, vec4 resolution)
+			{
+				vec2 boxSize = clamp(fwidth(uv) * resolution.xy, vec2(1e-5), vec2(1.0));
+				vec2 tx = uv * resolution.xy - 0.5 * boxSize;
+				vec2 offset = smoothstep(1.0 - boxSize, vec2(1.0), fract(tx)); // Weighted center.
+				//vec2 offset = clamp((fract(tx) - (1.0 - boxSize)) / boxSize, 0.0, 1.0); // Perfectly linear.
+				return (floor(tx) + 0.5 + offset) * resolution.zw;
+			}
 
 			void main(void)
 			{
