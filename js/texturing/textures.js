@@ -55,7 +55,8 @@ class Texture {
 		img.setAttribute('pagespeed_no_transform', '');
 		img.src = 'assets/missing.png'
 
-		var antiAliasing = Settings.get('antialiasing');
+		let antiAliasing = Settings.get('antialiasing');
+
 		var tex = new THREE.Texture(this.canvas);
 		tex.magFilter = antiAliasing ? THREE.LinearFilter : THREE.NearestFilter;
 		tex.minFilter = antiAliasing ? THREE.LinearFilter : THREE.NearestFilter;
