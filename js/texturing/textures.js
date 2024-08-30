@@ -157,7 +157,8 @@ class Texture {
 
 			void main(void)
 			{
-				vec4 color = texture2D(map, vUv);
+				vec2 uv = ${antiAliasing ? 'TexelAA(vUv, RESOLUTION)' : 'vUv'};
+				vec4 color = texture2D(map, uv);
 				
 				if (color.a < 0.01) discard;
 
