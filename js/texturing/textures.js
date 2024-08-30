@@ -137,6 +137,7 @@ class Texture {
 			uniform bool SHADE;
 			uniform bool EMISSIVE;
 			uniform vec3 LIGHTCOLOR;
+			uniform vec4 RESOLUTION;
 
 			centroid varying vec2 vUv;
 			varying float light;
@@ -186,7 +187,8 @@ class Texture {
 				SHADE: {type: 'bool', value: settings.shading.value},
 				LIGHTCOLOR: {type: 'vec3', value: new THREE.Color().copy(Canvas.global_light_color).multiplyScalar(settings.brightness.value / 50)},
 				LIGHTSIDE: {type: 'int', value: Canvas.global_light_side},
-				EMISSIVE: {type: 'bool', value: this.render_mode == 'emissive'}
+				EMISSIVE: {type: 'bool', value: this.render_mode == 'emissive'},
+				RESOLUTION: {type: 'vec4', value: new THREE.Vector4(img.width, img.height, 1.0 / img.width, 1.0 / img.height)}
 			},
 			vertexShader: vertShader,
 			fragmentShader: fragShader,
@@ -205,6 +207,10 @@ class Texture {
 			let dimensions_changed = scope.width !== img.naturalWidth || scope.height !== img.naturalHeight;
 			scope.width = img.naturalWidth;
 			scope.height = img.naturalHeight;
+
+			mat.uniforms.RESOLUTION.value = new THREE.Vector4(scope.width, scope.height, 1.0 / scope.width, 1.0 / scope.height);
+			mat.needsUpdate = true;
+
 			if (scope.selection) scope.selection.changeSize(scope.width, scope.height);
 			if (img.naturalWidth > 16384 || img.naturalHeight > 16384) {
 				scope.error = 2;
